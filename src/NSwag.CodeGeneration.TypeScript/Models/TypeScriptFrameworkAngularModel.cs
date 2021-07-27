@@ -42,5 +42,9 @@ namespace NSwag.CodeGeneration.TypeScript.Models
 
         /// <summary>Gets whether the export keyword should be added to all classes and enums.</summary>
         public bool ExportTypes => _settings.TypeScriptGeneratorSettings.ExportTypes;
+
+        /// <summary>Gets or sets the injection token type (used in the Angular template).</summary>
+        public bool IncludeHttpContextParameter => _settings.Template == TypeScriptTemplate.Angular && 
+                                                   _settings.IncludeHttpContextParameter;
     }
 }

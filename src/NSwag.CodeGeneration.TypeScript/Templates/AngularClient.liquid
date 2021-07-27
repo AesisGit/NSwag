@@ -39,7 +39,7 @@
 {% for operation in Operations -%}
 
     {% template Client.Method.Documentation %}
-    {{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% for parameter in operation.Parameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false%}, {% endif %}{% endfor %}): Observable<{{ operation.ResultType }}> {
+    {{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% for parameter in operation.Parameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false or IncludeHttpContextParameter == true%}, {% endif %}{% endfor %}{% if IncludeHttpContextParameter%}httpContext?: HttpContext{% endif %}) : Observable<{{ operation.ResultType }}> {
         {% template Client.RequestUrl %}
 
 {%     if operation.HasBody -%}
@@ -62,6 +62,9 @@
 {%     if operation.IsFile and Framework.Angular.UseHttpClient == false -%}
             responseType: ResponseContentType.Blob,
 {%     endif -%}
+{%     if IncludeHttpContextParameter -%}
+            httpContext,
+{%     endif -%}
             headers: new {% if Framework.Angular.UseHttpClient %}HttpHeaders{% else %}Headers{% endif %}({
 {%     for parameter in operation.HeaderParameters -%}
                 "{{ parameter.Name }}": {{ parameter.VariableName }} !== undefined && {{ parameter.VariableName }} !== null ? "" + {{ parameter.VariableName }} : "",
@@ -72,7 +75,7 @@
 {%     if operation.HasResultType and operation.HasAcceptHeaderParameterParameter == false -%}
                 "Accept": "{{ operation.Produces }}"
 {%     endif -%}
-            })
+            })      
         };
 
 {%     if UseTransformOptionsMethod -%}
