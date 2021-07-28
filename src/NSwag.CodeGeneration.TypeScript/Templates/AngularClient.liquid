@@ -75,7 +75,7 @@
 {%     if operation.HasResultType and operation.HasAcceptHeaderParameterParameter == false -%}
                 "Accept": "{{ operation.Produces }}"
 {%     endif -%}
-            })      
+            })
         };
 
 {%     if UseTransformOptionsMethod -%}
