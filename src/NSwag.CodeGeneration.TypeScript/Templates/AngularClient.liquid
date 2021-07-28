@@ -63,7 +63,7 @@
             responseType: ResponseContentType.Blob,
 {%     endif -%}
 {%     if IncludeHttpContextParameter -%}
-            httpContext,
+            context: httpContext,
 {%     endif -%}
             headers: new {% if Framework.Angular.UseHttpClient %}HttpHeaders{% else %}Headers{% endif %}({
 {%     for parameter in operation.HeaderParameters -%}
